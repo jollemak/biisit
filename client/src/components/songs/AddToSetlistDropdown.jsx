@@ -38,7 +38,7 @@ export default function AddToSetlistDropdown({ songId, setlists, onAdd, onCreate
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded transition-colors"
+          className="px-2 py-1 bg-green-600 hover:bg-green-700 rounded transition-colors text-sm"
           title="Add to Setlist"
         >
           +

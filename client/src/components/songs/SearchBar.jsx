@@ -10,7 +10,7 @@ export default function SearchBar({ value, onChange, onAddNew }) {
       />
       <button
         onClick={onAddNew}
-        className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
+        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-semibold transition-colors"
       >
         Add Song
       </button>

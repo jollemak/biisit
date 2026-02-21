@@ -4,7 +4,6 @@ import useSongs from '/src/hooks/useSongs.js';
 import useSetlistSongs from '/src/hooks/useSetlistSongs.js';
 import Layout from '/src/components/shared/Layout';
 import LoadingSpinner from '/src/components/shared/LoadingSpinner';
-import SongNavigation from '/src/components/songs/SongNavigation';
 import ErrorMessage from '/src/components/shared/ErrorMessage';
 import SuccessMessage from '/src/components/shared/SuccessMessage';
 
@@ -139,6 +138,32 @@ export default function SongViewPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [showMenu]);
 
+  // Keyboard shortcuts for navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // Only handle arrow keys when not typing in input fields
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      switch (event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          handlePrevious();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          handleNext();
+          break;
+        default:
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handlePrevious, handleNext]);
+
   if (songsLoading || (setlistId && setlistLoading) || !dataLoaded) {
     return (
       <Layout>
@@ -160,31 +185,62 @@ export default function SongViewPage() {
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <button
-            onClick={handleBack}
-            className="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
-          >
-            ← Back
-          </button>
+        <div className="fixed top-6 left-6 right-6 z-50 max-w-4xl mx-auto">
+          <div className="flex justify-between items-center mb-3">
+            <button
+              onClick={handleBack}
+              className="px-3 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
+            >
+              ← Back
+            </button>
+            
+            <h1 className="text-3xl font-bold">{song.title}</h1>
+            
+            {/* Hamburger Menu Button */}
+            <button
+              onClick={handleMenuToggle}
+              className="p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
+              title="Menu"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
           
-          <h1 className="text-3xl font-bold">{song.title}</h1>
-          
-          {/* Hamburger Menu Button */}
-          <button
-            onClick={handleMenuToggle}
-            className="p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
-            title="Menu"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          </button>
+          {/* Navigation Buttons - Fixed position below title */}
+          <div className="flex justify-center gap-2">
+            <button
+              onClick={handlePrevious}
+              disabled={navigationSongs.length <= 1}
+              className="w-10 h-10 bg-gray-800 bg-opacity-80 hover:bg-opacity-100 disabled:bg-opacity-50 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-all duration-200 shadow-lg hover:scale-110 active:scale-95"
+              aria-label="Previous song"
+              title="Previous song (←)"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            
+            <button
+              onClick={handleNext}
+              disabled={navigationSongs.length <= 1}
+              className="w-10 h-10 bg-gray-800 bg-opacity-80 hover:bg-opacity-100 disabled:bg-opacity-50 disabled:cursor-not-allowed text-white rounded-full flex items-center justify-center transition-all duration-200 shadow-lg hover:scale-110 active:scale-95"
+              aria-label="Next song"
+              title="Next song (→)"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
+          </div>
         </div>
-
-        {/* Dropdown Menu */}
+        
+        {/* Add padding to account for fixed header */}
+        <div className="pt-23">
+          {/* Dropdown Menu */}
         {showMenu && (
           <div className="menu-container mb-6 p-4 bg-gray-800 rounded-lg shadow-lg">
             {/* Formatting Controls */}
@@ -268,7 +324,7 @@ export default function SongViewPage() {
             </div>
           </div>
         )}
-
+        
         <div className="text-center">
           <div 
             className={`leading-relaxed whitespace-pre-line ${
@@ -285,14 +341,8 @@ export default function SongViewPage() {
             {song.lyrics}
           </div>
         </div>
+        </div>
       </div>
-
-      {/* Floating navigation buttons */}
-      <SongNavigation
-        onPrevious={handlePrevious}
-        onNext={handleNext}
-        disabled={navigationSongs.length <= 1}
-      />
 
       {/* Success message for formatting changes */}
       <SuccessMessage

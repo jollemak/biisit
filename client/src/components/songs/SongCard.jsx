@@ -16,16 +16,16 @@ export default function SongCard({
   };
 
   return (
-    <div className="bg-gray-800 p-6 rounded-lg">
+    <div className="bg-gray-800 p-1 rounded-lg">
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <h3
-            className="text-xl font-semibold hover:text-blue-400 cursor-pointer transition-colors"
+            className="text-xl font-semibold hover:text-blue-400 ml-2 cursor-pointer transition-colors"
             onClick={handleView}
           >
             {song.title}
           </h3>
-          <p className="text-gray-400 text-sm mt-2">
+          <p className="text-gray-400 text-sm ml-2 mt-2">
             {song.lyrics.substring(0, 100)}...
           </p>
         </div>
@@ -38,13 +38,13 @@ export default function SongCard({
           />
           <button
             onClick={() => onEdit(song)}
-            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded transition-colors"
+            className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
           >
             Edit
           </button>
           <button
             onClick={() => onDelete(song.id)}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded transition-colors"
+            className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded transition-colors text-sm"
           >
             Delete
           </button>
