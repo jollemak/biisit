@@ -8,11 +8,15 @@ import ErrorMessage from '/src/components/shared/ErrorMessage';
 import SuccessMessage from '/src/components/shared/SuccessMessage';
 
 export default function SetlistsPage() {
-  const { setlists, error, fetchSetlists, createSetlist, updateSetlist, deleteSetlist } = useSetlists();
+  const { setlists, error, fetchSetlists, createSetlist, updateSetlist, deleteSetlist, clearError } = useSetlists();
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [renameData, setRenameData] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+
+  useEffect(() => {
+    fetchSetlists();
+  }, [fetchSetlists]);
 
   useEffect(() => {
     fetchSetlists();
@@ -58,17 +62,17 @@ export default function SetlistsPage() {
         </button>
       </div>
 
-      <ErrorMessage message={error} />
-
-      <SuccessMessage
-        message={successMessage}
-        onClose={() => setSuccessMessage('')}
-      />
-
       <SetlistList
         setlists={setlists}
         onRename={handleRenameSetlist}
         onDelete={handleDeleteSetlist}
+      />
+
+      {/* Global notifications - now fixed positioned */}
+      <ErrorMessage message={error} onClose={() => clearError()} />
+      <SuccessMessage
+        message={successMessage}
+        onClose={() => setSuccessMessage('')}
       />
 
       <CreateSetlistModal

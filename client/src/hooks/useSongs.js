@@ -83,6 +83,10 @@ function useSongs() {
     }
   }, [fetchSongs]);
 
+  const clearError = useCallback(() => {
+    setError('');
+  }, []);
+
   return {
     songs,
     loading,
@@ -90,7 +94,8 @@ function useSongs() {
     fetchSongs,
     createSong,
     updateSong,
-    deleteSong
+    deleteSong,
+    clearError
   };
 }
 

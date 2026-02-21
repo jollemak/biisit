@@ -83,6 +83,10 @@ function useSetlists() {
     }
   }, [fetchSetlists]);
 
+  const clearError = useCallback(() => {
+    setError('');
+  }, []);
+
   return {
     setlists,
     loading,
@@ -90,7 +94,8 @@ function useSetlists() {
     fetchSetlists,
     createSetlist,
     updateSetlist,
-    deleteSetlist
+    deleteSetlist,
+    clearError
   };
 }
 

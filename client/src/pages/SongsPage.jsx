@@ -11,9 +11,9 @@ import SuccessMessage from '/src/components/shared/SuccessMessage';
 
 export default function SongsPage() {
   const navigate = useNavigate();
-  const { songs, error, fetchSongs, deleteSong } = useSongs();
+  const { songs, error, fetchSongs, deleteSong, clearError } = useSongs();
   const { setlists, fetchSetlists, createSetlist } = useSetlists();
-  const { addSongToSetlist } = useSetlistSongs();
+  const { addSongToSetlist, error: setlistError, clearError: clearSetlistError } = useSetlistSongs();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -44,8 +44,8 @@ export default function SongsPage() {
     }
   };
 
-  const handleAddToSetlist = async (setlistId, _songId) => {
-    const success = await addSongToSetlist(setlistId, _songId);
+  const handleAddToSetlist = async (setlistId, songId) => {
+    const success = await addSongToSetlist(setlistId, songId);
     if (success) {
       await fetchSetlists(); // Update setlist counts
       const setlist = setlists.find(s => s.id === setlistId);
@@ -71,13 +71,6 @@ export default function SongsPage() {
         onAddNew={handleAddSong}
       />
 
-      <ErrorMessage message={error} />
-
-      <SuccessMessage
-        message={successMessage}
-        onClose={() => setSuccessMessage('')}
-      />
-
       <SongList
         songs={filteredSongs}
         onEdit={handleEditSong}
@@ -85,6 +78,19 @@ export default function SongsPage() {
         setlists={setlists}
         onAddToSetlist={handleAddToSetlist}
         onCreateSetlist={handleCreateSetlist}
+      />
+
+      {/* Global notifications - now fixed positioned */}
+      <ErrorMessage 
+        message={error || setlistError} 
+        onClose={() => {
+          if (error) clearError();
+          if (setlistError) clearSetlistError();
+        }} 
+      />
+      <SuccessMessage
+        message={successMessage}
+        onClose={() => setSuccessMessage('')}
       />
     </Layout>
   );

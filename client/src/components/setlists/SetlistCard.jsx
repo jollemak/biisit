@@ -21,7 +21,12 @@ export default function SetlistCard({ setlist, onRename, onDelete }) {
     <div className="bg-gray-800 p-6 rounded-lg">
       <div className="flex justify-between items-center">
         <div className="flex-1">
-          <h3 className="text-xl font-semibold">{setlist.name}</h3>
+          <h3 
+            className="text-xl font-semibold cursor-pointer hover:text-blue-400 transition-colors" 
+            onClick={handleView}
+          >
+            {setlist.name}
+          </h3>
           <p className="text-gray-400 text-sm mt-1">
             {setlist.song_count} song{setlist.song_count !== 1 ? 's' : ''}
           </p>

@@ -92,6 +92,10 @@ function useSetlistSongs(setlistId) {
     }
   }, [fetchSetlistSongs]);
 
+  const clearError = useCallback(() => {
+    setError('');
+  }, []);
+
   return {
     setlistSongs,
     loading,
@@ -99,7 +103,8 @@ function useSetlistSongs(setlistId) {
     fetchSetlistSongs,
     addSongToSetlist,
     removeSongFromSetlist,
-    reorderSetlistSongs
+    reorderSetlistSongs,
+    clearError
   };
 }
 

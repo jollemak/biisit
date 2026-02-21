@@ -19,7 +19,8 @@ export default function SetlistDetailPage() {
     error,
     fetchSetlistSongs,
     removeSongFromSetlist,
-    reorderSetlistSongs
+    reorderSetlistSongs,
+    clearError
   } = useSetlistSongs(parseInt(id));
 
   const [currentSetlist, setCurrentSetlist] = useState(null);
@@ -124,13 +125,6 @@ export default function SetlistDetailPage() {
         </button>
       </div>
 
-      <ErrorMessage message={error} />
-
-      <SuccessMessage
-        message={successMessage}
-        onClose={() => setSuccessMessage('')}
-      />
-
       <SetlistSongList
         songs={setlistSongs}
         onRemove={handleRemoveSong}
@@ -144,6 +138,13 @@ export default function SetlistDetailPage() {
         onRename={handleRenameSubmit}
         currentName={currentSetlist.name}
         itemType="Setlist"
+      />
+
+      {/* Global notifications - now fixed positioned */}
+      <ErrorMessage message={error} onClose={() => clearError()} />
+      <SuccessMessage
+        message={successMessage}
+        onClose={() => setSuccessMessage('')}
       />
     </Layout>
   );

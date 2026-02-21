@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function SuccessMessage({ message, duration = 3000, onClose }) {
+export default function SuccessMessage({ message, duration = 2000, onClose }) {
   useEffect(() => {
     if (message && duration > 0) {
       const timer = setTimeout(() => {
@@ -13,7 +13,7 @@ export default function SuccessMessage({ message, duration = 3000, onClose }) {
   if (!message) return null;
 
   return (
-    <div className="bg-green-600 text-white p-4 rounded-lg mb-6 flex items-center justify-between">
+    <div className="fixed top-16 right-4 z-50 bg-green-600 text-white p-4 rounded-lg shadow-lg flex items-center justify-between max-w-sm">
       <span>{message}</span>
       {onClose && (
         <button

@@ -31,7 +31,12 @@ export default function SortableSongItem({ song, onView, onRemove }) {
         ☰
       </div>
       <div className="flex-1">
-        <h3 className="text-lg font-semibold">{song.title}</h3>
+        <h3 
+          className="text-lg font-semibold cursor-pointer hover:text-blue-400 transition-colors" 
+          onClick={() => onView(song)}
+        >
+          {song.title}
+        </h3>
         <p className="text-gray-400 text-sm">
           {song.lyrics.substring(0, 100)}...
         </p>
