@@ -34,11 +34,14 @@
 - ✅ **Search/Filter**: Real-time search by song title
 - ✅ **CRUD Operations**: Create, read, update, delete songs and setlists via UI
 - ✅ **Setlist Management**: Create setlists, add/remove songs, drag-and-drop reordering
-- ✅ **Navigation**: Tab-based navigation between songs and setlists
-- ✅ **State Management**: React hooks for all component state including navigation history
+- ✅ **Navigation**: React Router with URL-based navigation (5 routes: songs, song-form, song-view, setlists, setlist-detail)
+- ✅ **State Management**: Custom React hooks for API logic, proper state management with loading/error states
 - ✅ **Styling**: Tailwind CSS with dark theme
 - ✅ **API Integration**: Fetch API with proper error handling and success notifications
 - ✅ **Development Proxy**: Vite proxies `/api` requests to Express server
+- ✅ **Component Architecture**: Feature-based organization with granular, reusable components
+- ✅ **Testing**: Vitest configured with 11 passing tests for shared components
+- ✅ **Code Quality**: ESLint clean, production builds successful
 
 ### Deployment & Infrastructure
 - ✅ **Docker**: Multi-stage build (React build + Node production)
@@ -54,6 +57,12 @@
 4. **Deployment Configuration** - Docker + Fly.io setup
 5. **Documentation** - AGENTS.md with comprehensive guidelines
 6. **Setlist Feature** - Full Spotify-like playlist functionality with drag-and-drop, navigation, and real-time updates
+7. **Client Refactoring** - Monolithic App.jsx split into 5 organized pages with React Router
+8. **Component Architecture** - Feature-based organization with granular, reusable components (songs, setlists, shared, modals)
+9. **Custom Hooks** - API logic extracted into 3 custom hooks (useSongs, useSetlists, useSetlistSongs)
+10. **Modal Components** - Native prompt() dialogs replaced with proper React modal components
+11. **Testing Setup** - Vitest configured with 11 passing tests for shared components
+12. **Bug Fixes** - Race conditions fixed in setlist detail and song view pages
 
 ### 🔧 Technical Improvements
 - Fixed Express version compatibility (4.x for stability)
@@ -63,6 +72,10 @@
 - Fixed JSX syntax errors and verified build process
 - Implemented drag-and-drop with @dnd-kit library
 - Added navigation history tracking for proper back button behavior
+- Refactored client codebase with React Router and custom hooks
+- Resolved import path issues with absolute imports from /src/
+- Fixed race conditions in navigation effects with data loading state flags
+- Configured ESLint rules for underscore-prefixed variables
 
 ## Current State Assessment
 
@@ -73,13 +86,13 @@
 - **Frontend Build**: `npm run build:client` completes successfully
 - **Development**: Both servers run without conflicts
 - **Linting**: ESLint configured and working
+- **Testing**: Vitest configured with passing tests
 
 ### ⚠️ Known Issues/Limitations
-1. **No Tests**: Test framework not yet configured (placeholder script exists)
-2. **No Authentication**: Public access to all songs
-3. **No Pagination**: All songs loaded at once (fine for small datasets)
-4. **No Input Sanitization**: Basic validation only
-5. **Single Database File**: No backup/recovery mechanisms
+1. **No Authentication**: Public access to all songs
+2. **No Pagination**: All songs loaded at once (fine for small datasets)
+3. **No Input Sanitization**: Basic validation only
+4. **Single Database File**: No backup/recovery mechanisms
 
 ### 🚧 Technical Debt
 - **Error Messages**: Could be more user-friendly in UI
@@ -97,11 +110,14 @@ npm start
 # Frontend dev server (with hot reload)
 cd client && npm run dev
 
-# Build for production
+# Build React app for production
 npm run build:client
 
-# Lint code
+# Lint frontend code
 cd client && npm run lint
+
+# Run tests
+cd client && npm run test
 ```
 
 ### 📦 Dependencies
@@ -126,11 +142,10 @@ fly open      # Open live app
 ## Future Development Considerations
 
 ### 🔄 Immediate Priorities
-1. **Add Tests**: Set up Vitest for frontend, Supertest for API
-2. **Add Authentication**: User accounts and song ownership
-3. **Improve UX**: Better loading states, confirmations, notifications
-4. **Database Backup**: Automated backups for Fly.io volumes
-5. **Setlist Enhancements**: Advanced features like setlist sharing, export, or duplicate detection
+1. **Add Authentication**: User accounts and song ownership
+2. **Improve UX**: Better loading states, confirmations, notifications
+3. **Database Backup**: Automated backups for Fly.io volumes
+4. **Setlist Enhancements**: Advanced features like setlist sharing, export, or duplicate detection
 
 ### 🎯 Medium-term Goals
 1. **Advanced Search**: Search within lyrics, tags, artists
@@ -172,6 +187,7 @@ fly open      # Open live app
 - **Working Directory**: `/home/jmak/biisit`
 - **Git Status**: Not a git repository (consider initializing)
 - **Node Version**: v24.13.0 (compatible with project)
+- **Recent Work**: Major client refactoring completed - modular architecture, React Router, custom hooks, Vitest testing, race condition fixes
 - **All Systems Operational**: ✅ Ready for development
 
 ---
