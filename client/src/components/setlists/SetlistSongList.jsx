@@ -71,10 +71,11 @@ export default function SetlistSongList({
         strategy={verticalListSortingStrategy}
       >
         <div className="space-y-4">
-          {songs.map(song => (
+          {songs.map((song, index) => (
             <SortableSongItem
               key={song.id}
               song={song}
+              index={index}
               onView={handleView}
               onRemove={onRemove}
             />

@@ -30,9 +30,23 @@ function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
       lyrics TEXT NOT NULL,
+      text_align TEXT DEFAULT 'left',
+      font_size TEXT DEFAULT 'M',
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Migration: Add formatting columns to existing databases
+  try {
+    db.exec(`ALTER TABLE songs ADD COLUMN text_align TEXT DEFAULT 'left'`);
+  } catch (err) {
+    // Column already exists, ignore error
+  }
+  try {
+    db.exec(`ALTER TABLE songs ADD COLUMN font_size TEXT DEFAULT 'M'`);
+  } catch (err) {
+    // Column already exists, ignore error
+  }
 
   // Create setlists table if it doesn't exist
   db.exec(`

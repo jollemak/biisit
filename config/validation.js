@@ -21,6 +21,27 @@ function validateSongInput(title, lyrics) {
 }
 
 /**
+ * Validate song formatting options
+ * @param {string} textAlign - Text alignment (left, center, right)
+ * @param {string} fontSize - Font size (XS, S, M, L, XL)
+ * @returns {Object} Validation result with isValid boolean and error message
+ */
+function validateSongFormatting(textAlign, fontSize) {
+  const validAlignments = ['left', 'center', 'right'];
+  const validFontSizes = ['XS', 'S', 'M', 'L', 'XL'];
+
+  if (textAlign && !validAlignments.includes(textAlign)) {
+    return { isValid: false, error: 'Text alignment must be one of: left, center, right' };
+  }
+
+  if (fontSize && !validFontSizes.includes(fontSize)) {
+    return { isValid: false, error: 'Font size must be one of: XS, S, M, L, XL' };
+  }
+
+  return { isValid: true };
+}
+
+/**
  * Validate setlist input data
  * @param {string} name - Setlist name
  * @returns {Object} Validation result with isValid boolean and error message
@@ -81,6 +102,7 @@ function validateReorderInput(songs) {
 
 module.exports = {
   validateSongInput,
+  validateSongFormatting,
   validateSetlistInput,
   validateSongId,
   validateSetlistId,

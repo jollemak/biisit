@@ -1,7 +1,7 @@
 # Multi-stage build for Song Lyrics App
 
 # Stage 1: Build React frontend
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 
 # Set working directory for client
 WORKDIR /app/client
@@ -10,7 +10,7 @@ WORKDIR /app/client
 COPY client/package*.json ./
 
 # Install client dependencies
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Copy client source code
 COPY client/ ./
@@ -19,7 +19,10 @@ COPY client/ ./
 RUN npm run build
 
 # Stage 2: Production image
-FROM node:18-alpine
+FROM node:20-alpine
+
+# Install build tools for native modules (better-sqlite3)
+RUN apk add --no-cache python3 make g++
 
 # Create app directory
 WORKDIR /app
@@ -27,11 +30,15 @@ WORKDIR /app
 # Copy server package files
 COPY package*.json ./
 
-# Install only production dependencies for server
+# Install only production dependencies for server (will compile native modules)
 RUN npm ci --only=production
 
 # Copy server source code
 COPY server.js ./
+
+# Copy routes and config directories
+COPY routes/ ./routes/
+COPY config/ ./config/
 
 # Copy built React app from build stage
 COPY --from=build /app/client/dist ./client/dist

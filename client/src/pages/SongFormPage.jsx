@@ -9,14 +9,21 @@ import LoadingSpinner from '/src/components/shared/LoadingSpinner';
 export default function SongFormPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { songs, createSong, updateSong, loading, error } = useSongs();
+  const { songs, createSong, updateSong, loading, error, fetchSongs } = useSongs();
 
   const [initialData, setInitialData] = useState({ title: '', lyrics: '' });
   const [isLoading, setIsLoading] = useState(!!id);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   const isEditing = !!id;
 
   useEffect(() => {
+    fetchSongs().then(() => setDataLoaded(true));
+  }, [fetchSongs]);
+
+  useEffect(() => {
+    if (!dataLoaded) return; // Wait for data to load
+
     if (isEditing) {
       const song = songs.find(s => s.id === parseInt(id));
       if (song) {
@@ -24,13 +31,13 @@ export default function SongFormPage() {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        // Song not found, redirect to songs list
+        // Data is loaded but song not found - now we can redirect
         navigate('/');
       }
     } else {
       setIsLoading(false);
     }
-  }, [id, songs, isEditing, navigate]);
+  }, [id, songs, dataLoaded, isEditing, navigate]);
 
   const handleSubmit = async (formData) => {
     const success = isEditing
@@ -46,7 +53,7 @@ export default function SongFormPage() {
     navigate('/');
   };
 
-  if (isLoading) {
+  if (isLoading || !dataLoaded) {
     return (
       <Layout>
         <LoadingSpinner message="Loading song..." />

@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-export default function SortableSongItem({ song, onView, onRemove }) {
+export default function SortableSongItem({ song, index, onView, onRemove }) {
   const {
     attributes,
     listeners,
@@ -35,7 +35,7 @@ export default function SortableSongItem({ song, onView, onRemove }) {
           className="text-lg font-semibold cursor-pointer hover:text-blue-400 transition-colors" 
           onClick={() => onView(song)}
         >
-          {song.title}
+          {index + 1}. {song.title}
         </h3>
         <p className="text-gray-400 text-sm">
           {song.lyrics.substring(0, 100)}...
