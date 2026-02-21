@@ -1,20 +1,38 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, useMemo } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import useSongs from '/src/hooks/useSongs.js';
+import useSetlistSongs from '/src/hooks/useSetlistSongs.js';
 import Layout from '/src/components/shared/Layout';
 import LoadingSpinner from '/src/components/shared/LoadingSpinner';
+import SongNavigation from '/src/components/songs/SongNavigation';
 
 export default function SongViewPage() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const { songs, loading: songsLoading, fetchSongs } = useSongs();
+  const setlistId = searchParams.get('setlist');
+  const { setlistSongs, loading: setlistLoading, fetchSetlistSongs } = useSetlistSongs(setlistId ? parseInt(setlistId) : null);
 
   const [song, setSong] = useState(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  // Determine which songs array to use for navigation
+  const navigationSongs = useMemo(() => {
+    return setlistId ? setlistSongs : songs;
+  }, [setlistId, setlistSongs, songs]);
+
+  // Find current song index in navigation array
+  const currentSongIndex = useMemo(() => {
+    return navigationSongs.findIndex(s => s.id === parseInt(id));
+  }, [navigationSongs, id]);
+
   useEffect(() => {
     fetchSongs().then(() => setDataLoaded(true));
-  }, [fetchSongs]);
+    if (setlistId) {
+      fetchSetlistSongs();
+    }
+  }, [fetchSongs, setlistId, fetchSetlistSongs]);
 
   useEffect(() => {
     if (!dataLoaded) return; // Wait for data to load
@@ -33,10 +51,38 @@ export default function SongViewPage() {
   };
 
   const handleBack = () => {
-    navigate(-1); // Go back in history
+    if (setlistId) {
+      navigate(`/setlists/${setlistId}`);
+    } else {
+      navigate('/');
+    }
   };
 
-  if (songsLoading || !dataLoaded) {
+  const handlePrevious = () => {
+    if (navigationSongs.length === 0) return;
+    
+    const prevIndex = currentSongIndex <= 0 ? navigationSongs.length - 1 : currentSongIndex - 1;
+    const prevSong = navigationSongs[prevIndex];
+    
+    if (prevSong) {
+      const newUrl = setlistId ? `/songs/${prevSong.id}?setlist=${setlistId}` : `/songs/${prevSong.id}`;
+      navigate(newUrl);
+    }
+  };
+
+  const handleNext = () => {
+    if (navigationSongs.length === 0) return;
+    
+    const nextIndex = currentSongIndex >= navigationSongs.length - 1 ? 0 : currentSongIndex + 1;
+    const nextSong = navigationSongs[nextIndex];
+    
+    if (nextSong) {
+      const newUrl = setlistId ? `/songs/${nextSong.id}?setlist=${setlistId}` : `/songs/${nextSong.id}`;
+      navigate(newUrl);
+    }
+  };
+
+  if (songsLoading || (setlistId && setlistLoading) || !dataLoaded) {
     return (
       <Layout>
         <LoadingSpinner message="Loading song..." />
@@ -79,6 +125,13 @@ export default function SongViewPage() {
           </div>
         </div>
       </div>
+
+      {/* Floating navigation buttons */}
+      <SongNavigation
+        onPrevious={handlePrevious}
+        onNext={handleNext}
+        disabled={navigationSongs.length <= 1}
+      />
     </div>
   );
 }

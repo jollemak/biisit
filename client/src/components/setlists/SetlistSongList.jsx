@@ -20,7 +20,8 @@ export default function SetlistSongList({
   songs,
   onRemove,
   onReorder,
-  loading
+  loading,
+  setlistId
 }) {
   const navigate = useNavigate();
 
@@ -44,7 +45,7 @@ export default function SetlistSongList({
   };
 
   const handleView = (song) => {
-    navigate(`/songs/${song.id}`);
+    navigate(`/songs/${song.id}?setlist=${setlistId}`);
   };
 
   if (loading) {

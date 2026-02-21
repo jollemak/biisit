@@ -130,6 +130,7 @@ export default function SetlistDetailPage() {
         onRemove={handleRemoveSong}
         onReorder={handleReorder}
         loading={loading}
+        setlistId={parseInt(id)}
       />
 
       <RenameModal
